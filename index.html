@@ -5,11 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tic-Tac-Toe</title>
   <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
     .board {
       display: grid;
       grid-template-columns: repeat(3, 100px);
       grid-template-rows: repeat(3, 100px);
       gap: 2px;
+      margin: 20px auto;
     }
     .cell {
       width: 100px;
@@ -20,10 +25,19 @@
       align-items: center;
       font-size: 2em;
       cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .cell:hover {
+      background-color: lightgray;
+    }
+    .score {
+      margin-bottom: 20px;
     }
   </style>
 </head>
 <body>
+  <h1>Tic-Tac-Toe</h1>
+  <div class="score">Player: <span id="playerScore">0</span> - Computer: <span id="computerScore">0</span></div>
   <div class="board" onclick="handleClick(event)">
     <div class="cell" data-index="0"></div>
     <div class="cell" data-index="1"></div>
@@ -35,7 +49,10 @@
     <div class="cell" data-index="7"></div>
     <div class="cell" data-index="8"></div>
   </div>
+
   <script>
+    let playerScore = 0;
+    let computerScore = 0;
     let currentPlayer = 'X';
     const cells = document.querySelectorAll('.cell');
 
@@ -46,6 +63,13 @@
 
       cell.textContent = currentPlayer;
       if (checkWin()) {
+        if (currentPlayer === 'X') {
+          playerScore++;
+          document.getElementById('playerScore').textContent = playerScore;
+        } else {
+          computerScore++;
+          document.getElementById('computerScore').textContent = computerScore;
+        }
         alert(`${currentPlayer} wins!`);
         resetBoard();
         return;
@@ -57,6 +81,31 @@
       }
 
       currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+
+      // Computer's turn
+      setTimeout(computerTurn, 500);
+    }
+
+    function computerTurn() {
+      const emptyCells = [...cells].filter(cell => cell.textContent === '');
+      const randomIndex = Math.floor(Math.random() * emptyCells.length);
+      const cell = emptyCells[randomIndex];
+      cell.textContent = 'O';
+
+      if (checkWin()) {
+        computerScore++;
+        document.getElementById('computerScore').textContent = computerScore;
+        alert('Computer wins!');
+        resetBoard();
+        return;
+      }
+      if (checkDraw()) {
+        alert("It's a draw!");
+        resetBoard();
+        return;
+      }
+
+      currentPlayer = 'X';
     }
 
     function checkWin() {
@@ -89,4 +138,4 @@
     }
   </script>
 </body>
-  </html
+      </html
